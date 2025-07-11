@@ -6,9 +6,9 @@
 * **Security First** - Parameterized queries prevent SQL injection on database requests.
   
 ## 🛠️ Implementation Stack
-* **Frontend:** NextJS
-* **Backend:** Node.js, Express.js, TypeScript.
-* **Database:** MySQL.
+* **Frontend:** [![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js&logoColor=white)](https://nextjs.org/)
+* **Backend:** [![NodeJS](https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white)](https://nodejs.org/en) - [![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)](https://expressjs.com/) - [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)](https://www.typescriptlang.org/) - [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff)](https://www.mysql.com/)
+
 * **Architecture:** RESTful.
 
 ## ⚙️ Installation
