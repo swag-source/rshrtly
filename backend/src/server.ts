@@ -6,11 +6,13 @@ import { encode } from './helper/generateHash';
 import { isValidUrl } from './helper/validateUrl';
 import { DB_Row } from './types/shortenResponse';
 import { accessUrl } from './types/accessResponse';
+import cors from 'cors'
 
 
 // Basic setup.
 dotenv.config();
 const app = express();
+app.use(cors())
 
 // Define JSON as communication standard for app.
 app.use(express.json());
