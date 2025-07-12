@@ -4,7 +4,7 @@ import express from 'express';
 import { pool, testConnection } from './utils/db';
 import { encode } from './helper/generateHash';
 import { isValidUrl } from './helper/validateUrl';
-import { UrlRow } from './types/shortenResponse';
+import { DB_Row } from './types/shortenResponse';
 import { accessUrl } from './types/accessResponse';
 
 
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 });
 
 // Short URL Redirect Endpoint
-app.get('/api/v1/long/:hash', async (req, res) => {
+app.get('/:hash', async (req, res) => {
     try {
         // Extract hash from header.
         const hash = req.params.hash;
@@ -64,7 +64,7 @@ app.get('/api/v1/long/:hash', async (req, res) => {
 });
 
 // Short URL Generate Endpoint (DONE)
-app.post('/api/v1/short', async (req, res) => {
+app.post('/shorten', async (req, res) => {
     try {
         // Extract long URL from request body.
         const { longUrl } = req.body;
@@ -86,11 +86,11 @@ app.post('/api/v1/short', async (req, res) => {
         // End testing url validity
     
         // Verify if my url wasn't previously encoded.
-        const [result] = await pool.query(
+        const result = await pool.query(
             'SELECT long_url, url_hash, created_at, times_clicked FROM urls WHERE long_url = ?', [longUrl]
         ) as any;
 
-        const rows = result as UrlRow[];
+        const rows = result[0] as DB_Row[];
 
         let hash : string;
         let createdAt : string;
@@ -112,7 +112,7 @@ app.post('/api/v1/short', async (req, res) => {
             // Fetch the inserted row
             const [insertResult] = await pool.query(`SELECT long_url, url_hash, created_at, times_clicked FROM urls WHERE url_hash = ?`, [hash]) as any;
             
-            const rows = insertResult as UrlRow[];
+            const rows = insertResult as DB_Row[];
 
             // Define the response values
             createdAt = rows[0].created_at;
@@ -121,9 +121,8 @@ app.post('/api/v1/short', async (req, res) => {
         }
 
         // Return response body JSON with: {longUrl, shortUrl, timeOfCreation, clicks}
-        return res.status(200).json(
+        return res.status(201).json(
             {
-                "longUrl" : `${longUrl}`, 
                 "shortUrl" : `${process.env.WEB_DOMAIN || 'http://localhost:3030'}/${hash}`,
                 "creationTime" : `${createdAt}`,
                 "timesClicked" : `${clicks}`
@@ -135,6 +134,7 @@ app.post('/api/v1/short', async (req, res) => {
         return res.status(500).json('❌ Error encoding your url:');
     }
 });
+
 
 
 app.listen(PORT, () => {
