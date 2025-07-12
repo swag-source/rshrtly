@@ -12,7 +12,7 @@ export async function redirectController(req : any, res : any) {
         let long_url : string;
 
         if(result.length == 0){
-            res.json({
+            return res.json({
                 'Error' : 'Invalid URL. Please try another one.'
             })
         } else {

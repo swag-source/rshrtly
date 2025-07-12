@@ -1,6 +1,7 @@
 import { DB_Row } from "../types/shortenResponse";
 import { pool } from "../utils/db";
 
+// TODO
 export async function listShortUrlsController(req : any, res : any) {
     try {
         const [ result ] = await pool.query('SELECT * FROM urls LIMIT 10') as any;
