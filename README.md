@@ -82,9 +82,20 @@ rshrtly/
 ## Base URL
 `http://localhost:3030`
 
-## 🎯 API endpoints (V1)
-### POST `/api/v1/short`
-Returns the user the shortened URL based on long URL provided by input.
+## 🎯 API endpoints (V.1)
+
+### GET `/:hash`
+Redirects user to the long URL stored by the short URL.
+
+### **Example request:**
+``` JSON
+{
+    "shortUrl" : "rshrtly.io/*" 
+}
+```
+*** 
+### POST `/url/shorten`
+Returns shortened URL based on long URL provided by user's input.
 
 ### Example request:
 ``` JSON
@@ -96,25 +107,26 @@ Returns the user the shortened URL based on long URL provided by input.
 ### Example response (200): Correctly created
 ``` JSON
 {
-    "longUrl": "https://www.example.com/very/long/url",
     "shortUrl": "https://www.rshrtly.io/8-character-hash",
     "creationTime": "2025-07-10T12:00:00Z",
     "timesClicked": 0
 }
 ```
-### Example response (400): Error encoding
+### Example response (500): Error encoding
 ``` JSON
 {
     "error" : "❌ Error encoding your url."
 }
 ```
+***
+### GET `/url/list`
+List all user's generated hashes
 
-### GET `/api/v1/long/:hash`
-### **Example request:**
+### Example response (200): Correctly returned
+
 ``` JSON
 {
-    "shortUrl" : "rshrtly.io/*" 
+    "generated_hashes": ["hash_1", "hash_2", "...", "hash_n"]
 }
 ```
 
-### **Example response (200):** Correctly redirected
