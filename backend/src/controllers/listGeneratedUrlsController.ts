@@ -7,9 +7,8 @@ export async function listShortUrlsController(req : any, res : any) {
 
         const hashes = result.map((row : any) => row.url_hash);
 
-        console.log(hashes);
+        return res.status(200).json({generated_hashes : hashes});
 
-        return res.status(200).json(hashes);
     } catch (error) {
         console.error('Type:', error);
         return res.status(500).json({
