@@ -8,7 +8,7 @@ export default function useShorten() {
 
   const shortUrl = async (url: string) => {
     try {
-      const res = await fetch(API_URL + "/shorten", {
+      const res = await fetch(API_URL + "/url/shorten", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

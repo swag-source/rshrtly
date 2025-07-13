@@ -1,21 +1,12 @@
 // Imports
 import dotenv from 'dotenv';
 import express from 'express';
-<<<<<<< HEAD
-import { testConnection } from './utils/db';
 import { hashController } from './controllers/hashController';
 import { redirectController } from './controllers/redirectController';
-// import { customUrlController } from './controllers/customUrlController';
 import { listShortUrlsController } from './controllers/listGeneratedUrlsController';
-=======
-import { pool, testConnection } from './utils/db';
-import { encode } from './helper/generateHash';
-import { isValidUrl } from './helper/validateUrl';
-import { DB_Row } from './types/shortenResponse';
-import { accessUrl } from './types/accessResponse';
-import cors from 'cors'
+import { testConnection } from './utils/db';
+import cors from 'cors';
 
->>>>>>> 5e2bbc5c9a0f1c551f1ccfb04299853a79b0d9a6
 
 // Basic setup.
 dotenv.config();

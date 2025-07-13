@@ -1,18 +1,15 @@
-import { DB_Row } from "../types/shortenResponse";
 import { pool } from "../utils/db";
 
-// TODO
+// TODO (verify endpoint return type)
 export async function listShortUrlsController(req : any, res : any) {
     try {
-        const [ result ] = await pool.query('SELECT * FROM urls LIMIT 10') as any;
+        const [ result ] = await pool.query('SELECT url_hash FROM urls LIMIT 10') as any;
 
-        const rows = result[0] as DB_Row[];
+        const hashes = result.map((row : any) => row.url_hash);
 
-        const list = rows.map((item) => ({ 'url_hash' : item.url_hash}));
+        console.log(hashes);
 
-        console.log(res);
-
-        return res.status(200).send(list);
+        return res.status(200).json(hashes);
     } catch (error) {
         console.error('Type:', error);
         return res.status(500).json({
