@@ -1,6 +1,6 @@
 export function isValidUrl(str : string) : boolean {
     // Weird regex check for valid url's.
-    // Regex: 
+    // Regex: (protocol)
     const pattern = new RegExp(
     '^([a-zA-Z]+:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -9,6 +9,6 @@ export function isValidUrl(str : string) : boolean {
       '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
       '(\\#[-a-z\\d_]*)?$', // fragment locator
     'i');
-    
+  
     return pattern.test(str);
 }
