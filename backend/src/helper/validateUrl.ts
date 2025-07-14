@@ -1,6 +1,5 @@
 export function isValidUrl(str : string) : boolean {
     // Weird regex check for valid url's.
-    // Regex: (protocol)
     const pattern = new RegExp(
     '^([a-zA-Z]+:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name

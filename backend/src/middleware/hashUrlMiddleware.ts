@@ -3,7 +3,7 @@ import { isValidUrl } from "../helper/validateUrl";
 import { DB_Row } from "../types/shortenResponse";
 import { encode } from "../helper/generateHash";
 
-export async function hashController(req : any, res : any){
+export async function hashURL(req : any, res : any){
     try {
         // Extract long URL from request body.
         const { longUrl } = req.body;

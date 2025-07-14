@@ -1,9 +1,10 @@
 // Imports
 import dotenv from 'dotenv';
 import express from 'express';
-import { hashController } from './controllers/hashController';
-import { redirectController } from './controllers/redirectController';
-import { listShortUrlsController } from './controllers/listGeneratedUrlsController';
+import { hashURL } from './middleware/hashUrlMiddleware';
+import { redirectURL } from './middleware/redirectMiddleware';
+import { listShortUrls } from './middleware/listGeneratedUrlsMiddleware';
+
 import { testConnection } from './utils/db';
 import cors from 'cors';
 
@@ -30,13 +31,13 @@ app.get('/', (req, res) => {
 });
 
 // Short URL Redirect Endpoint
-app.get('/:hash', redirectController);
+app.get('/:hash', redirectURL);
 
 // Short URL Generate Endpoint (DONE)
-app.post('/url/shorten', hashController);
+app.post('/url/shorten', hashURL);
 
 // List all generated URLs ENDPOINT (TODO)
-app.get('/url/list', listShortUrlsController);
+app.get('/url/list', listShortUrls);
 
 // Custom short URL Generate Endpoint (TODO)
 // app.post('/', customUrlController);

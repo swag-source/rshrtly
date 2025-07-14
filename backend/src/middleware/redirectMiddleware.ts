@@ -1,7 +1,7 @@
 import { accessUrl } from "../types/accessResponse";
 import { pool } from "../utils/db";
 
-export async function redirectController(req : any, res : any) {
+export async function redirectURL(req : any, res : any) {
     try {
         // Extract hash from header.
         const hash = req.params.hash;

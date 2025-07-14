@@ -1,7 +1,7 @@
 import { pool } from "../utils/db";
 
 // TODO (verify endpoint return type)
-export async function listShortUrlsController(req : any, res : any) {
+export async function listShortUrls(req : any, res : any) {
     try {
         const [ result ] = await pool.query('SELECT url_hash FROM urls LIMIT 10') as any;
 
