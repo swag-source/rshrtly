@@ -9,22 +9,19 @@ export async function hashURL(req : any, res : any){
         const { longUrl } = req.body;
 
         // Begin testing url validity.
-        // Check if longUrl is provided.
         if(longUrl === undefined || longUrl === '') {
             return res.status(400).json({
                 "Error": 'Please provide a long URL to shorten.'
             });
         }
         
-        // Verify if URL is valid.
+        // Case 2: Verify if URL is valid.
         if(!isValidUrl(longUrl)){
             return res.status(400).json({
                 "Error": 'Invalid URL'
             })
         }
-        // End testing url validity
-    
-        // Verify if my url wasn't previously encoded.
+        // End testing URL validity
         const result = await pool.query(
             'SELECT long_url, url_hash, created_at, times_clicked FROM urls WHERE long_url = ?', [longUrl]
         ) as any;

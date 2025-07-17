@@ -1,18 +1,19 @@
 // Imports
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
+
 import { hashURL } from './middleware/hashUrlMiddleware';
 import { redirectURL } from './middleware/redirectMiddleware';
 import { listShortUrls } from './middleware/listGeneratedUrlsMiddleware';
-
-import { testConnection } from './utils/db';
-import cors from 'cors';
+import { testDBConnection } from './utils/db';
+import { client, testCacheConnection } from './utils/cache';
 
 
 // Basic setup.
 dotenv.config();
 const app = express();
-app.use(cors())
+app.use(cors());
 
 // Define JSON as communication standard for app.
 app.use(express.json());
@@ -20,28 +21,36 @@ app.use(express.json());
 // Define variables.
 const PORT  = process.env.PORT || 3030;
 
-// Test connection to database
-testConnection();
+async function startServer() {
+    try {
+        
+        // Test connection to database    
+        await testDBConnection();
 
-// Endpoints
-app.get('/', (req, res) => {
-    console.log('✅ Accessed main page.');
-    // Send a response to the client.
-    res.status(200).send('Successfully accessed main page.');
-});
+        // Test connection to redis
+        await testCacheConnection();
+        
+        // Endpoints
+        // Short URL Generate Endpoint
+        app.post('/url/shorten', hashURL);
 
-// Short URL Redirect Endpoint
-app.get('/:hash', redirectURL);
+        // Short URL Redirect Endpoint
+        app.get('/:hash', redirectURL);
 
-// Short URL Generate Endpoint (DONE)
-app.post('/url/shorten', hashURL);
+        // List all generated URLs ENDPOINT
+        app.get('/url/list', listShortUrls);
 
-// List all generated URLs ENDPOINT (TODO)
-app.get('/url/list', listShortUrls);
+        // Test cache endpoint
 
-// Custom short URL Generate Endpoint (TODO)
-// app.post('/', customUrlController);
+        app.listen(PORT, () => {
+            console.log(`Server running on port: ${PORT}, website: http://localhost:${PORT}`);
+        });
+        
+    } catch (error) {
+        console.error('Error starting the server: ', error);
+        process.exit(1);
+    }
 
-app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}, website: http://localhost:${PORT}`);
-});
+}
+
+startServer();

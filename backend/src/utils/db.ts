@@ -10,11 +10,19 @@ export const pool = mysql.createPool({
         password : process.env.DB_PASSWORD,
 });
 
-export async function testConnection() {
+export async function testDBConnection() {
     try {
         await pool.query('SELECT 1');
         console.log('✅ Database connected');
     } catch (error) {
         console.error('❌ Database connection failed:', error);       
+    }
+}
+
+export async function incrementClickCount(hash: string) {
+    try {
+        await pool.query('UPDATE urls SET times_clicked = times_clicked + 1 WHERE url_hash = ?', [hash]);
+    } catch (error) {
+        console.log('Error incrementing click count', error)
     }
 }
