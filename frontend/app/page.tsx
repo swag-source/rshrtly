@@ -29,10 +29,21 @@ import {
   Clock,
   Check,
 } from "lucide-react";
-import FloatingParticles from "@/components/floating-particles";
 import ShortenerForm from "@/components/shortener-form";
-import { ShortenedUrl } from "@/types/shortened-url";
+import useShorten from "@/hooks/use-shorten";
+import { FloatingParticles } from "@/components/particles-floating";
 
+interface ShortenedUrl {
+  id: string;
+  originalUrl: string;
+  shortCode: string;
+  title?: string;
+  createdAt: Date;
+  clicks: number;
+}
+
+// TODO: Llevarlo a variable de entorno
+const WEB_DOMAIN = "rshrtly.io/";
 export default function UrlShortener() {
   const [urls, setUrls] = useState<ShortenedUrl[]>([]);
   const [editingUrl, setEditingUrl] = useState<ShortenedUrl | null>(null);
@@ -41,8 +52,25 @@ export default function UrlShortener() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { toast } = useToast();
+  const { getUrlList } = useShorten();
 
-  // Cargar URLs del localStorage al iniciar
+  const fetchUrlList = async () => {
+    const res = await getUrlList();
+    if (res.ok) {
+      setUrls(
+        res.data.map((hash: string, index: number) => ({
+          id: hash + index,
+          originalUrl: "-", // TODO: Cuando recibamos el dato de la url original, lo seteamos
+          shortCode: WEB_DOMAIN + hash,
+          title: "Shorted URL - " + (index + 1),
+          createdAt: new Date(),
+          clicks: 0,
+        }))
+      );
+    } else {
+    }
+  };
+
   useEffect(() => {
     const savedUrls = localStorage.getItem("shortenedUrls");
     if (savedUrls) {
@@ -73,6 +101,7 @@ export default function UrlShortener() {
     toast({
       title: "URL Deleted",
       description: "The link has been removed",
+      duration: 3000,
     });
   };
 
@@ -91,6 +120,7 @@ export default function UrlShortener() {
         title: "Invalid URL",
         description: "Please enter a valid URL",
         variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -115,6 +145,7 @@ export default function UrlShortener() {
     toast({
       title: "URL Updated",
       description: "Changes saved successfully",
+      duration: 3000,
     });
   };
 
@@ -126,12 +157,14 @@ export default function UrlShortener() {
       toast({
         title: "Copied to Clipboard",
         description: "Link copied successfully",
+        duration: 3000,
       });
     } catch {
       toast({
         title: "Copy Failed",
         description: "Unable to copy to clipboard",
         variant: "destructive",
+        duration: 3000,
       });
     }
   };
@@ -144,7 +177,7 @@ export default function UrlShortener() {
   };
 
   const getShortUrl = (shortCode: string) => {
-    return `${shortCode}`;
+    return `short.ly/${shortCode}`;
   };
 
   const totalClicks = urls.reduce((sum, url) => sum + url.clicks, 0);
@@ -229,6 +262,21 @@ export default function UrlShortener() {
                     ...prev,
                   ])
                 }
+                onError={(title, description) =>
+                  toast({
+                    title,
+                    description,
+                    duration: 3000,
+                    variant: "destructive",
+                  })
+                }
+                onSuccess={(title, description) =>
+                  toast({
+                    title,
+                    description,
+                    duration: 3000,
+                  })
+                }
               />
 
               {/* URLs List */}
@@ -275,7 +323,7 @@ export default function UrlShortener() {
                                   onClick={() => handleUrlClick(url)}
                                   className="text-blue-400 hover:text-blue-300 font-mono text-sm bg-blue-500/10 px-3 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 hover:bg-blue-500/20"
                                 >
-                                  {getShortUrl(url.shortCode)}
+                                  {url.shortCode}
                                   <ExternalLink className="h-3 w-3" />
                                 </button>
                                 <Button
