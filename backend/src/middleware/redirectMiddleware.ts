@@ -14,8 +14,9 @@
             
             let long_url: string | null;
             let dbIdentifier: string; // Track which column matched for increment
+            let ttl : number = 3600;
 
-            // Cache miss!!!
+            // Case 1: cache miss
             if (!isPresent) {
                 // Check DB for both url_hash and custom_url
                 const [result] = await pool.query(`SELECT long_url, url_hash, custom_url FROM urls WHERE url_hash = ? OR custom_url = ?`, [identifier, identifier]) as any;
@@ -41,7 +42,7 @@
                 await incrementClickCount(dbIdentifier, row.custom_url !== null);
 
                 // Add to cache for future requests => <K : identifier, V : url> 
-                await writeToCache(identifier, long_url);
+                await writeToCache(identifier, long_url, ttl);
 
                 console.log('✅ Successfully added to cache');
 
@@ -49,7 +50,7 @@
                 return res.status(301).redirect(long_url);
             }
 
-            // Cache hit!!
+            // Case 2: cache hit.
             long_url = await getUrlFromCache(identifier);
 
             console.log('✅ Cache hit');

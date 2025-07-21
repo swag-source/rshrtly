@@ -34,7 +34,6 @@ export async function incrementClickCount(identifier: string, isCustomUrl: boole
                 [identifier]
             );
         }
-        
         console.log(`✅ Click count incremented for ${isCustomUrl ? 'custom URL' : 'hash'}: ${identifier}`);
     } catch (error) {
         console.error('Error incrementing click count:', error);

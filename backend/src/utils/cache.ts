@@ -27,8 +27,8 @@ export async function testCacheConnection() {
 }
 
 // Client functions
-export async function writeToCache(key : string, value : string) : Promise<string | null> {
-    return await client.set(key, value, {EX : 3600});
+export async function writeToCache(key : string, value : string, ttl : number) : Promise<string | null> {
+    return await client.set(key, value, {EX : ttl});
 }
 
 export async function getUrlFromCache(hash:string) {

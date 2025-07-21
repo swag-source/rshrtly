@@ -15,7 +15,7 @@ function isValidCustomUrl(custom_url: string | undefined): boolean {
     return customUrlRegex.test(custom_url) && !reservedWords.includes(custom_url.toLowerCase());
 }
 
-export async function hashUrl(req: any, res: any) {
+export async function hashURL(req: any, res: any) {
     try {
         const { longUrl, customUrl } = req.body;
 
@@ -58,7 +58,7 @@ export async function hashUrl(req: any, res: any) {
                 // Custom URL is available - create new entry
                 await pool.query(
                     'INSERT INTO urls (long_url, url_hash, custom_url, created_at, times_clicked) VALUES (?, ?, ?, NOW(), 0)',
-                    [longUrl, encode(longUrl + customUrl), customUrl]
+                    [longUrl, encode(customUrl), customUrl]
                 );
 
                 // Fetch the created entry
