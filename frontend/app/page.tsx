@@ -36,14 +36,14 @@ import { FloatingParticles } from "@/components/particles-floating";
 interface ShortenedUrl {
   id: string;
   originalUrl: string;
-  shortCode: string;
+  shortUrl: string;
   title?: string;
   createdAt: Date;
   clicks: number;
 }
 
 // TODO: Llevarlo a variable de entorno
-const WEB_DOMAIN = "rshrtly.io/";
+const WEB_DOMAIN = process.env.NEXT_PUBLIC_WEB_DOMAIN;
 export default function UrlShortener() {
   const [urls, setUrls] = useState<ShortenedUrl[]>([]);
   const [editingUrl, setEditingUrl] = useState<ShortenedUrl | null>(null);
@@ -161,12 +161,9 @@ export default function UrlShortener() {
     setUrls((prev) =>
       prev.map((u) => (u.id === url.id ? { ...u, clicks: u.clicks + 1 } : u))
     );
-    window.open(url.originalUrl, "_blank");
+    window.open(url.shortUrl, "_blank");
   };
 
-  const getShortUrl = (shortCode: string) => {
-    return `short.ly/${shortCode}`;
-  };
 
   const totalClicks = urls.reduce((sum, url) => sum + url.clicks, 0);
 
@@ -242,7 +239,7 @@ export default function UrlShortener() {
                     {
                       id: Date.now().toString(),
                       originalUrl,
-                      shortCode: shortedUrl,
+                      shortUrl: shortedUrl,
                       title: newTitle.trim() || undefined,
                       createdAt: new Date(),
                       clicks: 0,
@@ -293,8 +290,7 @@ export default function UrlShortener() {
                           key={url.id}
                           className="group p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300"
                           style={{
-                            animationDelay: `${index * 100}ms`,
-                            animation: "slideInUp 0.6s ease-out forwards",
+                            animation: `slideInUp ${index * 100}ms ease-out forwards`,
                           }}
                         >
                           <div className="flex items-start justify-between gap-4">
@@ -311,7 +307,7 @@ export default function UrlShortener() {
                                   onClick={() => handleUrlClick(url)}
                                   className="text-blue-400 hover:text-blue-300 font-mono text-sm bg-blue-500/10 px-3 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 hover:bg-blue-500/20"
                                 >
-                                  {url.shortCode}
+                                  {url.shortUrl}
                                   <ExternalLink className="h-3 w-3" />
                                 </button>
                                 <Button
@@ -319,7 +315,7 @@ export default function UrlShortener() {
                                   size="sm"
                                   onClick={() =>
                                     copyToClipboard(
-                                      `https://${getShortUrl(url.shortCode)}`,
+                                      url.shortUrl,
                                       url.id
                                     )
                                   }
@@ -353,7 +349,7 @@ export default function UrlShortener() {
 
                             {/* Action Buttons */}
                             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                              <Dialog
+                              {/* <Dialog
                                 open={isEditDialogOpen}
                                 onOpenChange={setIsEditDialogOpen}
                               >
@@ -427,7 +423,7 @@ export default function UrlShortener() {
                                     </div>
                                   </div>
                                 </DialogContent>
-                              </Dialog>
+                              </Dialog> */}
 
                               <Button
                                 variant="ghost"

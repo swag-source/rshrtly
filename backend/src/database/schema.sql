@@ -10,5 +10,5 @@ CREATE TABLE urls (
 );
 
 -- Delete all elements and restore id count
-DELETE FROM urls
+DELETE FROM urls;
 ALTER TABLE urls AUTO_INCREMENT = 1;

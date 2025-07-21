@@ -19,10 +19,25 @@ export async function testDBConnection() {
     }
 }
 
-export async function incrementClickCount(hash: string) {
+export async function incrementClickCount(identifier: string, isCustomUrl: boolean = false): Promise<void> {
     try {
-        await pool.query('UPDATE urls SET times_clicked = times_clicked + 1 WHERE url_hash = ?', [hash]);
+        if (isCustomUrl) {
+            // Increment by custom_url
+            await pool.query(
+                'UPDATE urls SET times_clicked = times_clicked + 1 WHERE custom_url = ?',
+                [identifier]
+            );
+        } else {
+            // Increment by url_hash
+            await pool.query(
+                'UPDATE urls SET times_clicked = times_clicked + 1 WHERE url_hash = ?',
+                [identifier]
+            );
+        }
+        
+        console.log(`✅ Click count incremented for ${isCustomUrl ? 'custom URL' : 'hash'}: ${identifier}`);
     } catch (error) {
-        console.log('Error incrementing click count', error)
+        console.error('Error incrementing click count:', error);
+        throw error;
     }
 }

@@ -1,0 +1,9 @@
+# Implementacion de getUrls
+
+1. El endpoint devuelve { hash, clickCount } 
+
+Problemas:
+- Paginacion. Actualmente, dicho endpoint devuelve toda la tabla. 
+- Estamos obteniendo urls que yo no generé. Solcucion:  ? (usuarios, token, identificador)
+
+2. custom title. 

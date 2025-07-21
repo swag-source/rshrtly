@@ -3,11 +3,11 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
-import { hashURL } from './middleware/hashUrlMiddleware';
 import { redirectURL } from './middleware/redirectMiddleware';
 import { listShortUrls } from './middleware/listGeneratedUrlsMiddleware';
 import { testDBConnection } from './utils/db';
-import { client, testCacheConnection } from './utils/cache';
+import { testCacheConnection } from './utils/cache';
+import { hashUrl } from './middleware/hashUrlMiddleware';
 
 
 // Basic setup.
@@ -32,7 +32,7 @@ async function startServer() {
         
         // Endpoints
         // Short URL Generate Endpoint
-        app.post('/url/shorten', hashURL);
+        app.post('/url/shorten', hashUrl);
 
         // Short URL Redirect Endpoint
         app.get('/:hash', redirectURL);
