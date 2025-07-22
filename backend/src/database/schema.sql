@@ -1,12 +1,14 @@
 -- Database creation query
 CREATE DATABASE rshrtly_db;
 USE rshrtly;
+
 CREATE TABLE urls (
     id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
     long_url VARCHAR(2048) NOT NULL,
     url_hash VARCHAR(8) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    times_clicked INTEGER DEFAULT 0
+    times_clicked INTEGER DEFAULT 0,
+    custom_url VARCHAR(50) NULL
 );
 
 -- Delete all elements and restore id count

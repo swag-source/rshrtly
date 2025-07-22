@@ -23,7 +23,6 @@ const PORT  = process.env.PORT || 3030;
 
 async function startServer() {
     try {
-        
         // Test connection to database    
         await testDBConnection();
 

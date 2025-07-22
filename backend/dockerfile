@@ -1,0 +1,22 @@
+# Backend dockerfile
+
+# Base image
+FROM node:24
+
+# Working directory
+WORKDIR /app
+
+# Copy packages
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+
+# Expose backend port (default TCP)
+EXPOSE 3030
+
+# Copy files
+COPY . .
+
+# Run commands
+CMD ["npm", "run", "dev"]

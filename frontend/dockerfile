@@ -1,0 +1,35 @@
+# Dockerfile for Frontend
+
+# Base Image
+FROM node:24
+
+# Set working directory
+WORKDIR /app
+
+# Copy packages
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Expose port
+EXPOSE 3000
+
+# Copy files
+COPY . .
+
+# Run commands
+CMD ["npm", "run", "dev"]
+
+
+
+
+
+
+
+
+
+
+
+
+
