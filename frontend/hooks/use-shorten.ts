@@ -7,9 +7,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3030";
 export default function useShorten() {
   const shortUrl = async (url: string, custom : string) => {
     try {
+			console.log({custom});
       const res = await axios.post(API_URL + "/url/shorten", {
         longUrl: url,
-        customTitle: custom, 
+        customUrl: custom, 
       });
 
       return { data: res.data.shortUrl, ok: res.status !== 200 };

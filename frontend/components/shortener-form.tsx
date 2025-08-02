@@ -23,7 +23,7 @@ export default function ShortenerForm({
   const handleAddUrl = async () => {
     setIsLoading(true);
 
-    const { data, ok } = await shortUrl(newUrl);
+    const { data, ok } = await shortUrl(newUrl, newTitle);
     if (!ok) {
       console.log("toast");
       if (onError) onError("An error has occurred", "Please try again.");
