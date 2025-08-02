@@ -2,6 +2,20 @@
     import { pool, incrementClickCount } from "../utils/db";
     import { writeToCache, getUrlFromCache, checkCachePresent } from "../utils/cache";
 
+    function normalizeUrl(url : string) : string {
+        if (url.match(/^https?:\/\//)) {
+            return url;
+        }
+    
+        // Check if it starts with // (protocol-relative)
+        if (url.startsWith('//')) {
+            return `https:${url}`;
+        }
+    
+        // Default: prepend https://
+        return `https://${url}`;
+    }
+
     export async function redirectURL(req: any, res: any) {
         try {
             // Extract hash/custom URL from params
@@ -47,7 +61,7 @@
                 console.log('✅ Successfully added to cache');
 
                 // Redirect user to URL (301 for permanent redirect)
-                return res.status(301).redirect(long_url);
+                return res.status(301).redirect(normalizeUrl(long_url as string));
             }
 
             // Case 2: cache hit.
@@ -69,7 +83,7 @@
                 await incrementClickCount(dbIdentifier, row.custom_url !== null);
             }
 
-            return res.status(301).redirect(long_url);
+            return res.status(301).redirect(normalizeUrl(long_url as string));
 
         } catch (error) {
             console.error('Error in redirectURL:', error);
