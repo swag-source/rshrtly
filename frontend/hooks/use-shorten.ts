@@ -5,8 +5,6 @@ import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3030";
 
 export default function useShorten() {
-  const [shortenUrsl, setShortenUrls] = useState<string[]>();
-
   const shortUrl = async (url: string) => {
     try {
       const res = await axios.post(API_URL + "/url/shorten", {
@@ -31,7 +29,6 @@ export default function useShorten() {
   };
 
   return {
-    shortenUrsl,
     shortUrl,
 		getUrlList
   };

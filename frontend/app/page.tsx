@@ -44,6 +44,7 @@ interface ShortenedUrl {
 
 // TODO: Llevarlo a variable de entorno
 const WEB_DOMAIN = process.env.NEXT_PUBLIC_WEB_DOMAIN;
+export const URLS_KEY = "shortenedUrls"
 export default function UrlShortener() {
   const [urls, setUrls] = useState<ShortenedUrl[]>([]);
   const [editingUrl, setEditingUrl] = useState<ShortenedUrl | null>(null);
@@ -52,28 +53,21 @@ export default function UrlShortener() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { toast } = useToast();
-  const { getUrlList } = useShorten();
-
-  const fetchUrlList = async () => {
-    const res = await getUrlList();
-    if (res.ok) {
-      setUrls(
-        res.data.map((hash: string, index: number) => ({
-          id: hash + index,
-          originalUrl: "-", // TODO: Cuando recibamos el dato de la url original, lo seteamos
-          shortCode: WEB_DOMAIN + hash,
-          title: "Shorted URL - " + (index + 1),
-          createdAt: new Date(),
-          clicks: 0,
-        }))
-      );
-    } else {
-    }
-  };
 
   useEffect(() => {
-    fetchUrlList();
+    const savedUrls = localStorage.getItem(URLS_KEY);
+    if (savedUrls) {
+      const parsedUrls = JSON.parse(savedUrls).map((url: any) => ({
+        ...url,
+        createdAt: new Date(url.createdAt),
+      }));
+      setUrls(parsedUrls);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(URLS_KEY, JSON.stringify(urls));
+  }, [urls]);
 
   const isValidUrl = (url: string) => {
     try {
@@ -163,7 +157,6 @@ export default function UrlShortener() {
     );
     window.open(url.shortUrl, "_blank");
   };
-
 
   const totalClicks = urls.reduce((sum, url) => sum + url.clicks, 0);
 
@@ -290,7 +283,9 @@ export default function UrlShortener() {
                           key={url.id}
                           className="group p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300"
                           style={{
-                            animation: `slideInUp ${index * 100}ms ease-out forwards`,
+                            animation: `slideInUp ${
+                              index * 100
+                            }ms ease-out forwards`,
                           }}
                         >
                           <div className="flex items-start justify-between gap-4">
@@ -314,10 +309,7 @@ export default function UrlShortener() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() =>
-                                    copyToClipboard(
-                                      url.shortUrl,
-                                      url.id
-                                    )
+                                    copyToClipboard(url.shortUrl, url.id)
                                   }
                                   className="hover:bg-white/10 transition-all duration-300"
                                 >
