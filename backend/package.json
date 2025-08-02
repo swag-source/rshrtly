@@ -14,11 +14,11 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/node": "24.0.10",
-    "cross-env": "7.0.3",
     "tsx": "4.20.3",
     "typescript": "5.8.3"
   },
   "dependencies": {
+    "cross-env": "7.0.3",
     "@types/express": "^4.17.23",
     "@types/sqlite3": "^3.1.11",
     "cors": "^2.8.5",
